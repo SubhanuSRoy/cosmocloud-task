@@ -24,6 +24,42 @@ const blockSlice = createSlice({
       });
     },
 
+    addInnerBlock(state, action) {
+      // Define a recursive function to find the parent block by id
+      const findParentBlock = (blocks, parentId) => {
+        for (const block of blocks) {
+          if (block.id === parentId) {
+            return block;
+          }
+          if (block.innerBlocks && block.innerBlocks.length > 0) {
+            const innerBlock = findParentBlock(block.innerBlocks, parentId);
+            if (innerBlock) {
+              return innerBlock;
+            }
+          }
+        }
+        return null;
+      };
+
+      let innerCount = 0;
+      // Find the parent block based on its id and add the new block into its innerBlocks array
+      const parentId = action.payload.parentId;
+      const parentBlock = findParentBlock(state.blocks, parentId);
+      if (parentBlock) {
+        // Generate the new id based on the parent block's id and level
+        const newId = parentId * 100 + (Math.floor(Math.random() * 99) + 10);
+        // Push the new block into the parent block's innerBlocks array
+        parentBlock.innerBlocks.push({
+          id: newId,
+          name: action.payload.name,
+          type: action.payload.type,
+          required: action.payload.required,
+          level: action.payload.level + 1,
+          innerBlocks: [],
+        });
+      }
+    },
+
     //reducer to set an outer block.
     //we get the specific block from its id and then we change the properties of the block
     setBlock(state, action) {

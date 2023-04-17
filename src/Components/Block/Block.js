@@ -4,7 +4,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { blockActions } from "../../features/block/block-slice";
 
-function Block({ id, name, type, req }) {
+function Block({ id, name, type, req, level }) {
   const dispatch = useDispatch();
   const nameChange = (e) => {
     dispatch(
@@ -16,9 +16,13 @@ function Block({ id, name, type, req }) {
       })
     );
   };
+  console.log(level);
   return (
-    <div className="flex bg-gray-100 items-center justify-between p-4 gap-4 my-1 rounded-md shadow-md">
-      <h5 className="text-gray-600">{id}</h5>
+    <div
+      className="flex bg-gray-100 items-center justify-between p-4 gap-4 my-1 rounded-md shadow-md"
+      style={{ marginLeft: level > 1 ? `${level}rem` : 0 }}
+    >
+      {/* <h5 className="text-gray-600">{id}</h5> */}
       <input
         value={name}
         defaultValue="name"
@@ -72,7 +76,20 @@ function Block({ id, name, type, req }) {
       {/* plus only apprears if the type is a object */}
       {type === "Object" && (
         <button>
-          <AiOutlinePlusSquare className="h-8 w-8" />
+          <AiOutlinePlusSquare
+            className="h-8 w-8"
+            onClick={() => {
+              dispatch(
+                blockActions.addInnerBlock({
+                  parentId: id,
+                  name: "New Object Block",
+                  type: "Object",
+                  required: true,
+                  level: level,
+                })
+              );
+            }}
+          />
         </button>
       )}
       {type != "Object" && <div className="w-8"></div>}
