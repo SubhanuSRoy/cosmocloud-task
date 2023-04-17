@@ -19,10 +19,36 @@ const blockSlice = createSlice({
         name: action.payload.name,
         type: action.payload.type,
         required: action.payload.required,
+        level: action.payload.level,
+        innerBlocks: [],
       });
     },
-    
 
+    //reducer to set an outer block.
+    //we get the specific block from its id and then we change the properties of the block
+    setBlock(state, action) {
+      state.blocks.map((block) => {
+        if (block.id === action.payload.id) {
+          block.name = action.payload.name;
+          block.type = action.payload.type;
+          block.required = action.payload.required;
+        }
+      });
+    },
+
+    //reducer function to add an inner block
+    setInnerBlock(state, action) {
+      state.blocks.map((block) => {
+        if (block.type === "Object") {
+          block.innerBlocks?.map((ib) => {
+            ib.name = action.payload.name;
+            ib.type = action.payload.type;
+            ib.required = action.payload.required;
+          });
+        }
+      });
+    },
+    //reducer function to remove a block
   },
 });
 
