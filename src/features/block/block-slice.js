@@ -49,6 +49,11 @@ const blockSlice = createSlice({
       });
     },
     //reducer function to remove a block
+    delBlock(state, action) {
+      state.blocks = state.blocks.filter(
+        (block) => block.id !== action.payload
+      );
+    },
   },
 });
 

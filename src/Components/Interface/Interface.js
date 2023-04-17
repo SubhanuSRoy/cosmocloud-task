@@ -20,8 +20,8 @@ function Interface() {
   };
 
   return (
-    <div className="bg-gray-200 shadow-lg rounded-md p-4">
-      <div className="flex flex-col p-8 border-2 border-gray-500 rounded-md">
+    <div className="bg-gray-50 shadow-lg rounded-md p-4">
+      <div className="flex flex-col p-8 border-2 border-gray-500 rounded-md min-w-[20rem]">
         <div className="flex items-center justify-between mb-2">
           <h2>Field Name and Type</h2>
           <button onClick={addBlockFunc}>

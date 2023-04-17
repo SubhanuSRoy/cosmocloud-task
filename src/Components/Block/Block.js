@@ -12,12 +12,12 @@ function Block({ id, name, type, req }) {
         id: id,
         name: e.target.value,
         type: type,
-        required:req,
+        required: req,
       })
     );
   };
   return (
-    <div className="flex bg-gray-300 items-center justify-between p-4 gap-4 my-1 rounded-md">
+    <div className="flex bg-gray-100 items-center justify-between p-4 gap-4 my-1 rounded-md shadow-md">
       <h5 className="text-gray-600">{id}</h5>
       <input
         value={name}
@@ -33,8 +33,8 @@ function Block({ id, name, type, req }) {
             blockActions.setBlock({
               id: id,
               type: e.target.value,
-              name:name,
-              required:req,
+              name: name,
+              required: req,
             })
           );
         }}
@@ -45,8 +45,7 @@ function Block({ id, name, type, req }) {
         <option>Boolean</option>
       </select>
       <div className="w-20"></div>
-      {req && <p>Required</p>}
-      {!req && <p>Not Required</p>}
+      <p>Required</p>
       <label for="AcceptConditions" class="relative h-8 w-14 cursor-pointer">
         <input
           type="checkbox"
@@ -76,13 +75,14 @@ function Block({ id, name, type, req }) {
           <AiOutlinePlusSquare className="h-8 w-8" />
         </button>
       )}
-      {
-        type!="Object" && (
-          <div className="w-8"></div>
-        )
-      }
+      {type != "Object" && <div className="w-8"></div>}
       <button>
-        <MdDeleteOutline className="h-8 w-8" />
+        <MdDeleteOutline
+          className="h-8 w-8"
+          onClick={() => {
+            dispatch(blockActions.delBlock(id));
+          }}
+        />
       </button>
     </div>
   );
