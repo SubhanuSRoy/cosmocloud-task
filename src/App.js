@@ -1,10 +1,9 @@
 import React from "react";
 import Interface from "./Components/Interface/Interface";
-import Block from "./Components/Block/Block";
 
 function App() {
   return (
-    <div className="bg-gray-900 min-h-screen flex items-center justify-center flex-col gap-4">
+    <div className="bg-gray-900 min-h-screen p-4 flex items-center justify-center flex-col gap-4">
       <Interface />
       <a
         class="inline-flex items-center gap-2 rounded border-2 border-white bg-white px-5 py-3 font-medium text-[#171515] transition-colors hover:bg-transparent hover:text-white hover:shadow-lg focus:outline-none focus:ring active:opacity-75"

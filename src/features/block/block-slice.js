@@ -59,17 +59,8 @@ const blockSlice = createSlice({
       }
     },
 
-    //reducer to set an outer block.
-    //we get the specific block from its id and then we change the properties of the block
-    // setBlock(state, action) {
-    //   state.blocks.map((block) => {
-    //     if (block.id === action.payload.id) {
-    //       block.name = action.payload.name;
-    //       block.type = action.payload.type;
-    //       block.required = action.payload.required;
-    //     }
-    //   });
-    // },
+    //reducer to set any block.
+    //we get the specific block from its by recursively calling the search function and then we change the properties of the block
 
     setBlock(state, action) {
       // Define a recursive function to find the current block by id
@@ -100,18 +91,6 @@ const blockSlice = createSlice({
       }
     },
 
-    //reducer function to add an inner block
-    setInnerBlock(state, action) {
-      state.blocks.map((block) => {
-        if (block.type === "Object") {
-          block.innerBlocks?.map((ib) => {
-            ib.name = action.payload.name;
-            ib.type = action.payload.type;
-            ib.required = action.payload.required;
-          });
-        }
-      });
-    },
 
     //reducer function to remove a block
     delBlock(state, action) {
