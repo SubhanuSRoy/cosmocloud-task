@@ -97,7 +97,7 @@ function Block({ id, name, type, req, level }) {
         <MdDeleteOutline
           className="h-8 w-8"
           onClick={() => {
-            dispatch(blockActions.delBlock(id));
+            dispatch(blockActions.delBlock({ level: level, id: id }));
           }}
         />
       </button>

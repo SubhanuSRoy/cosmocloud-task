@@ -41,7 +41,6 @@ const blockSlice = createSlice({
         return null;
       };
 
-      let innerCount = 0;
       // Find the parent block based on its id and add the new block into its innerBlocks array
       const parentId = action.payload.parentId;
       const parentBlock = findParentBlock(state.blocks, parentId);
@@ -62,14 +61,43 @@ const blockSlice = createSlice({
 
     //reducer to set an outer block.
     //we get the specific block from its id and then we change the properties of the block
+    // setBlock(state, action) {
+    //   state.blocks.map((block) => {
+    //     if (block.id === action.payload.id) {
+    //       block.name = action.payload.name;
+    //       block.type = action.payload.type;
+    //       block.required = action.payload.required;
+    //     }
+    //   });
+    // },
+
     setBlock(state, action) {
-      state.blocks.map((block) => {
-        if (block.id === action.payload.id) {
-          block.name = action.payload.name;
-          block.type = action.payload.type;
-          block.required = action.payload.required;
+      // Define a recursive function to find the current block by id
+      const findCurrentBlock = (blocks, blockId) => {
+        for (const block of blocks) {
+          if (block.id === blockId) {
+            return block;
+          }
+          if (block.innerBlocks && block.innerBlocks.length > 0) {
+            const innerBlock = findCurrentBlock(block.innerBlocks, blockId);
+            if (innerBlock) {
+              return innerBlock;
+            }
+          }
         }
-      });
+        return null;
+      };
+
+      // Find the current block based on its id and then make changes in it
+      // we have to recursively search for it since it can be an inner block
+      const currentId = action.payload.id;
+      const currentBlock = findCurrentBlock(state.blocks, currentId);
+      if (currentBlock) {
+        // when you find the current block make the changes
+        currentBlock.name = action.payload.name;
+        currentBlock.type = action.payload.type;
+        currentBlock.required = action.payload.required;
+      }
     },
 
     //reducer function to add an inner block
@@ -84,11 +112,46 @@ const blockSlice = createSlice({
         }
       });
     },
+
     //reducer function to remove a block
     delBlock(state, action) {
-      state.blocks = state.blocks.filter(
-        (block) => block.id !== action.payload
-      );
+      //first check whether its an outer block, if yes then do normal filtering in blocks
+      if (action.payload.level === 1) {
+        state.blocks = state.blocks.filter(
+          (block) => block.id !== action.payload.id
+        );
+      } else {
+        // Define a recursive function to find the parent block by id
+        const findParentBlock = (blocks, parentId) => {
+          for (const block of blocks) {
+            if (block.innerBlocks && block.innerBlocks.length > 0) {
+              const innerBlockIndex = block.innerBlocks.findIndex(
+                (innerBlock) => innerBlock.id === parentId
+              );
+              if (innerBlockIndex !== -1) {
+                // Remove the inner block from the parent block's innerBlocks array
+                block.innerBlocks.splice(innerBlockIndex, 1);
+                return true;
+              } else {
+                const innerBlock = findParentBlock(block.innerBlocks, parentId);
+                if (innerBlock) {
+                  return true;
+                }
+              }
+            }
+          }
+          return false;
+        };
+
+        // Find the parent block that contains the inner block based on its id and remove the inner block
+        const blockId = action.payload.id;
+        const parentBlockRemoved = findParentBlock(state.blocks, blockId);
+        if (parentBlockRemoved) {
+          return state; // Return the updated state with the inner block removed
+        } else {
+          return state; // Return the original state if the inner block was not found
+        }
+      }
     },
   },
 });
